@@ -1,0 +1,30 @@
+# platform.app.yaml
+
+name: app
+type: "python:3.9"  # Specify the Python version you're using
+
+build:
+  flavor: "python-pip"
+  commands:
+    # Install dependencies
+    "pip install --upgrade pip"
+    "pip install -r requirements.txt"
+
+web:
+  commands:
+    # Run the Flask app
+    start: "gunicorn main:app --bind 0.0.0.0:$PORT"
+
+  locations:
+    "/":
+      root: "frontend/public"
+      passthru: "/index.html"
+
+mounts:
+  "overpass_cache":
+    source: "overpass_cache"
+    destination: "/overpass_cache"
+
+variables:
+  env:
+    OPENAI_API_KEY: "your-openai-api-key"  # Replace with your actual key
